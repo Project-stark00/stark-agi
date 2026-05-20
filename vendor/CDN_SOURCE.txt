@@ -1,0 +1,9 @@
+Anime.js bundled library
+Version: 3.2.2
+Primary CDN source used for this package:
+https://unpkg.com/animejs@3.2.2/lib/anime.min.js
+Alternative CDN URL:
+https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js
+
+The site references this local copy from index.html:
+<script src="vendor/anime.min.js"></script>

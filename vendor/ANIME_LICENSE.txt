@@ -1,0 +1,4 @@
+Anime.js is released under the MIT License.
+Copyright (c) Julian Garnier.
+Project: https://animejs.com/
+Repository: https://github.com/juliangarnier/anime
