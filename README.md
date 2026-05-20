@@ -13,13 +13,6 @@ vendor/CDN_SOURCE.txt
 vendor/ANIME_LICENSE.txt
 ```
 
-## How to use
-
-1. Replace both `https://github.com/YOUR_USERNAME/YOUR_REPO` placeholders in `index.html` with your real GitHub repository URL.
-2. Push the full folder contents to the root of your GitHub repo.
-3. Enable GitHub Pages from `Settings -> Pages -> Deploy from a branch`.
-4. Select your main branch and `/root`.
-
 ## Notes
 
 - JavaScript and CSS are separated from HTML.
