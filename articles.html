@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StarkAGI Articles — Problems, Fixes & Research Notes</title>
+  <meta
+    name="description"
+    content="Read StarkAGI development articles, solved problems, unsolved research notes, diagrams, and charts rendered from Markdown files."
+  />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="orbital-bg" aria-hidden="true">
+    <span class="particle" style="left: 9%; top: 22%;"></span>
+    <span class="particle" style="left: 18%; top: 74%;"></span>
+    <span class="particle" style="left: 33%; top: 16%;"></span>
+    <span class="particle" style="left: 61%; top: 20%;"></span>
+    <span class="particle" style="left: 76%; top: 68%;"></span>
+    <span class="particle" style="left: 90%; top: 34%;"></span>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="index.html" aria-label="StarkAGI home">
+        <span class="brand-mark">S</span>
+        <span>StarkAGI</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html#vision">Vision</a>
+        <a href="index.html#architecture">Architecture</a>
+        <a href="index.html#roadmap">Roadmap</a>
+        <a href="progress.html">Progress</a>
+        <a href="articles.html" aria-current="page">Articles</a>
+        <a class="button" href="https://github.com/Project-stark00/stark-agi.github.io" target="_blank" rel="noreferrer">View GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page article-page">
+    <section class="article-hero">
+      <div class="article-hero__content">
+        <p class="section-kicker">Markdown Knowledge Base</p>
+        <h1>Problems, fixes, diagrams, and research notes.</h1>
+        <p>
+          Publish Markdown files as polished web articles. Use this page to document what went wrong,
+          how you solved it, what is still unsolved, and what StarkAGI should learn from each case.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="articles.html?article=stark-native-kernel-debugging-example">Open Example Article</a>
+          <a class="button secondary" href="progress.html">View Project Progress</a>
+        </div>
+      </div>
+      <aside class="article-reader-panel" aria-label="Article renderer features">
+        <div class="panel-line"><span>Markdown</span><strong>Local files</strong></div>
+        <div class="panel-line"><span>Diagrams</span><strong>Mermaid-ready</strong></div>
+        <div class="panel-line"><span>Charts</span><strong>Chart.js-ready</strong></div>
+        <div class="panel-line"><span>Status</span><strong>GitHub Pages ready</strong></div>
+      </aside>
+    </section>
+
+    <section class="article-layout">
+      <aside class="article-sidebar">
+        <div class="article-sidebar__head">
+          <p class="section-kicker">Library</p>
+          <h2>Articles</h2>
+        </div>
+        <div id="articleList" class="article-list" aria-live="polite">
+          <div class="article-loading">Loading articles…</div>
+        </div>
+      </aside>
+
+      <article class="article-shell">
+        <div id="articleMount" class="markdown-article" aria-live="polite">
+          <div class="article-empty-state">
+            <p class="section-kicker">Select an article</p>
+            <h2>Choose a Markdown file from the library.</h2>
+            <p>
+              Articles are loaded from <code>data/articles.json</code> and rendered from Markdown files in the <code>articles/</code> folder.
+            </p>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <div class="page">
+      StarkAGI Articles — Document every problem, fix, lesson, and unresolved research question.
+    </div>
+  </footer>
+
+  <script src="vendor/anime.min.js"></script>
+  <script src="js/articles.js"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StarkAGI Progress — Devlog & Research Updates</title>
+  <meta
+    name="description"
+    content="Track StarkAGI project progress, development logs, research notes, and native digital life milestones."
+  />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="progress-page">
+  <div class="noise"></div>
+  <div class="orbital-bg" aria-hidden="true">
+    <span class="particle" style="left: 10%; top: 18%;"></span>
+    <span class="particle" style="left: 24%; top: 76%;"></span>
+    <span class="particle" style="left: 48%; top: 12%;"></span>
+    <span class="particle" style="left: 72%; top: 22%;"></span>
+    <span class="particle" style="left: 86%; top: 70%;"></span>
+  </div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="index.html" aria-label="StarkAGI home">
+        <span class="brand-mark">S</span>
+        <span>StarkAGI</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html#vision">Vision</a>
+        <a href="index.html#architecture">Architecture</a>
+        <a href="index.html#roadmap">Roadmap</a>
+        <a href="progress.html" aria-current="page">Progress</a>
+        <a href="articles.html">Articles</a>
+        <a class="button" href="https://github.com/Project-stark00/stark-agi.github.io" target="_blank" rel="noreferrer">View GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page">
+    <section class="progress-hero">
+      <div class="progress-hero__content">
+        <div class="eyebrow"><span class="pulse"></span> Project progress log</div>
+        <h1>
+          Build log for
+          <span class="gradient-text">StarkAGI</span>
+        </h1>
+        <p class="hero-copy">
+          A public-facing timeline for StarkAGI milestones, research updates, implementation notes, and verified changes.
+          Update <code>data/progress.json</code> to publish new progress entries.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="#devlog">Read Devlog</a>
+          <a class="button secondary" href="index.html">Back to Home</a>
+        </div>
+      </div>
+
+      <aside class="progress-status-panel" aria-label="Current project status">
+        <div class="status-orb" aria-hidden="true"></div>
+        <p class="section-kicker">Current Status</p>
+        <h2 id="status-current-phase">Loading progress…</h2>
+        <div class="status-list">
+          <div>
+            <span>Active milestone</span>
+            <strong id="status-active-milestone">Loading…</strong>
+          </div>
+          <div>
+            <span>Overall status</span>
+            <strong id="status-overall">Loading…</strong>
+          </div>
+          <div>
+            <span>Last updated</span>
+            <strong id="status-last-updated">Loading…</strong>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="progress-shell reveal" aria-label="Project focus">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Focus</p>
+          <h2>What is being built now?</h2>
+        </div>
+        <p id="status-focus" class="section-copy">
+          Loading current project focus from data/progress.json…
+        </p>
+      </div>
+      <div class="progress-summary-grid" id="progress-summary-grid"></div>
+    </section>
+
+    <section id="devlog" class="progress-shell reveal">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Devlog</p>
+          <h2>Latest project updates.</h2>
+        </div>
+        <p class="section-copy">
+          Each entry is rendered from the JSON data file. Add new logs at the top of the <code>logs</code> array to keep the newest updates first.
+        </p>
+      </div>
+      <div class="timeline" id="log-list"></div>
+    </section>
+
+    <section class="progress-shell reveal">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Milestones</p>
+          <h2>Native kernel roadmap.</h2>
+        </div>
+        <p class="section-copy">
+          This board tracks what is completed, what is active, and what is planned next for the StarkAGI native digital life kernel.
+        </p>
+      </div>
+      <div class="milestone-board" id="milestone-board"></div>
+    </section>
+
+    <section class="progress-shell reveal">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">Research Notes</p>
+          <h2>Short notes for future readers.</h2>
+        </div>
+        <p class="section-copy">
+          Use this section for design reasoning, architecture decisions, and principles that should stay visible while the project evolves.
+        </p>
+      </div>
+      <div class="notes-grid" id="notes-grid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="page">
+      StarkAGI Progress — update <code>data/progress.json</code>, commit, and push to publish new project logs.
+    </div>
+  </footer>
+
+  <script src="vendor/anime.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/progress.js"></script>
+</body>
+</html>

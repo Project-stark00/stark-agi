@@ -1,0 +1,130 @@
+{
+  "projectStatus": {
+    "currentPhase": "Phase 1 — Continuous State Micro-Life Core",
+    "activeMilestone": "M1 — Isolated C++ Micro-Kernel",
+    "overallStatus": "Architecture Defined",
+    "lastUpdated": "2026-05-20",
+    "repository": "https://github.com/Project-stark00/stark-agi.github.io",
+    "focus": "Implementation of the smallest inspectable continuous-state substrate before introducing memory or autonomy."
+  },
+  "logs": [
+    {
+      "date": "2026-05-20",
+      "title": "Native Digital Life Vault Ingested",
+      "type": "Research",
+      "status": "Completed",
+      "summary": "Integrated the master plan for Stark's Native Digital Life, detailing 12 implementation phases from specification hardening to native renderer research."
+    },
+    {
+      "date": "2026-05-20",
+      "title": "Public StarkAGI website prepared",
+      "type": "Website",
+      "status": "Completed",
+      "summary": "Created a GitHub Pages-ready landing page with a futuristic glass interface, local Anime.js bundle, and a placeholder repository link."
+    },
+    {
+      "date": "2026-05-20",
+      "title": "Progress and devlog system added",
+      "type": "Site Update",
+      "status": "Completed",
+      "summary": "Added a JSON-powered project progress page so future logs, milestone changes, and research updates can be edited without touching page layout code."
+    },
+    {
+      "date": "2026-05-20",
+      "title": "Native kernel roadmap published",
+      "type": "Research",
+      "status": "Completed",
+      "summary": "Documented the initial direction for a local-first StarkAGI kernel based on continuous state, memory resonance, sleep review, and bounded autonomy."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "P0",
+      "title": "Specification Hardening",
+      "status": "Completed",
+      "summary": "Define axioms, authority, and non-negotiable red lines."
+    },
+    {
+      "id": "P1",
+      "title": "Continuous State Micro-Life Core",
+      "status": "In Progress",
+      "summary": "M1: Isolated C++ core with fixed-length state and inspection logs."
+    },
+    {
+      "id": "P2",
+      "title": "State Region Stabilization",
+      "status": "Planned",
+      "summary": "Stabilize functional regions for perception and cognitive state."
+    },
+    {
+      "id": "P3",
+      "title": "Feedback & Correction Engine",
+      "status": "Planned",
+      "summary": "Implement gated fusion and feedback weighting."
+    },
+    {
+      "id": "P4",
+      "title": "Chronicle Evidence Spine",
+      "status": "Planned",
+      "summary": "Create a durable evidence trail of cognitive state changes."
+    },
+    {
+      "id": "P5",
+      "title": "Native Memory Bridge",
+      "status": "Planned",
+      "summary": "Bridge the state core to an external MemoryStore."
+    },
+    {
+      "id": "P6",
+      "title": "Drive Engine",
+      "status": "Planned",
+      "summary": "Implement intent projection and goal pressure."
+    },
+    {
+      "id": "P7",
+      "title": "Projection Engine",
+      "status": "Planned",
+      "summary": "Map internal state to external representations."
+    },
+    {
+      "id": "P8",
+      "title": "Ollama Renderer Bridge",
+      "status": "Planned",
+      "summary": "Connect the core mind to an LLM 'mouth' for output."
+    },
+    {
+      "id": "P9",
+      "title": "24/7 Daemon Runtime",
+      "status": "Planned",
+      "summary": "Transition the core to a persistent background runtime."
+    },
+    {
+      "id": "P10",
+      "title": "Work Mode Integration",
+      "status": "Planned",
+      "summary": "Integrate core cognition into software engineering workflows."
+    },
+    {
+      "id": "P11",
+      "title": "Obsidian Mirror",
+      "status": "Planned",
+      "summary": "Export braincells to an Obsidian mirror for human review."
+    },
+    {
+      "id": "P12",
+      "title": "Native Renderer Research",
+      "status": "Planned",
+      "summary": "Explore native visualization of cognitive states."
+    }
+  ],
+  "notes": [
+    {
+      "title": "The Continuous-State Shift",
+      "body": "Stark is moving away from the Transformer paradigm toward a local-first continuous-state runtime that manages perception, memory, and intent without tokenization."
+    },
+    {
+      "title": "Language as Rendering",
+      "body": "In this architecture, language is a rendering layer. The native kernel owns the intent; the LLM merely polishes the final output."
+    }
+  ]
+}
