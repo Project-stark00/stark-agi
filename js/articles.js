@@ -263,9 +263,10 @@ function extractFigureInner(figureHtml) {
 function renderMermaidBlock(source) {
   const fallback = renderDiagram(source);
   const fallbackInner = extractFigureInner(fallback);
+  const fallbackClass = fallback.includes("diagram-card--wrapped-flow") ? " diagram-card--wrapped-flow" : "";
 
   return `
-    <figure class="diagram-card" data-diagram-renderer="mermaid" data-diagram-source="${encodeDataSource(source)}">
+    <figure class="diagram-card${fallbackClass}" data-diagram-renderer="mermaid" data-diagram-source="${encodeDataSource(source)}">
       <div class="diagram-mermaid-host" aria-label="Mermaid diagram output"></div>
       <div class="diagram-fallback">${fallbackInner}</div>
       <figcaption>Mermaid-ready diagram. Local fallback is shown when Mermaid.js is not installed.</figcaption>
@@ -320,42 +321,158 @@ function parseNodeToken(token, nodes) {
   return id;
 }
 
-function computeDiagramLevels(ids, edges) {
+function parseDiagramEdge(line, nodes) {
+  const cleaned = String(line || "").trim().replace(/;$/, "");
+  const arrowPattern = "(?:-->|==>|-\\.->|---)";
+  const pipeLabel = new RegExp(`^(.+?)\\s*${arrowPattern}\\s*\\|(.+?)\\|\\s*(.+)$`);
+  const textLabel = /^(.+?)\s+--\s+(.+?)\s+-->\s+(.+)$/;
+  const plainArrow = new RegExp(`^(.+?)\\s*${arrowPattern}\\s*(.+)$`);
+
+  let match = cleaned.match(pipeLabel);
+  if (match) {
+    return {
+      from: parseNodeToken(match[1], nodes),
+      to: parseNodeToken(match[3], nodes),
+      label: match[2].trim()
+    };
+  }
+
+  match = cleaned.match(textLabel);
+  if (match) {
+    return {
+      from: parseNodeToken(match[1], nodes),
+      to: parseNodeToken(match[3], nodes),
+      label: match[2].trim()
+    };
+  }
+
+  match = cleaned.match(plainArrow);
+  if (match) {
+    return {
+      from: parseNodeToken(match[1], nodes),
+      to: parseNodeToken(match[2], nodes),
+      label: ""
+    };
+  }
+
+  return null;
+}
+
+function buildDiagramGraph(ids, edges) {
   const order = new Map(ids.map((id, index) => [id, index]));
   const incoming = new Map(ids.map((id) => [id, 0]));
   const outgoing = new Map(ids.map((id) => [id, []]));
 
-  edges.forEach((edge) => {
+  edges.forEach((edge, edgeIndex) => {
     if (!incoming.has(edge.to) || !outgoing.has(edge.from)) return;
     incoming.set(edge.to, incoming.get(edge.to) + 1);
-    outgoing.get(edge.from).push(edge.to);
+    outgoing.get(edge.from).push({ ...edge, edgeIndex });
   });
 
-  const queue = ids
+  return { order, incoming, outgoing };
+}
+
+function computeDiagramLevels(ids, edges) {
+  const { order, incoming, outgoing } = buildDiagramGraph(ids, edges);
+  const levels = new Map(ids.map((id) => [id, 0]));
+  const sources = ids
     .filter((id) => incoming.get(id) === 0)
     .sort((a, b) => order.get(a) - order.get(b));
-  const levels = new Map(ids.map((id) => [id, 0]));
-  let visited = 0;
+  const roots = sources.length ? sources : ids.slice(0, 1);
+  const visiting = new Set();
 
-  while (queue.length) {
-    const id = queue.shift();
-    visited += 1;
+  function visit(id, level) {
+    if (!id || visiting.has(id) || level > ids.length + 2) return;
 
-    outgoing.get(id).forEach((nextId) => {
-      levels.set(nextId, Math.max(levels.get(nextId), levels.get(id) + 1));
-      incoming.set(nextId, incoming.get(nextId) - 1);
-      if (incoming.get(nextId) === 0) {
-        queue.push(nextId);
-        queue.sort((a, b) => order.get(a) - order.get(b));
-      }
+    levels.set(id, Math.max(levels.get(id) || 0, level));
+    visiting.add(id);
+
+    const nextEdges = (outgoing.get(id) || []).slice().sort((a, b) => a.edgeIndex - b.edgeIndex);
+    nextEdges.forEach((edge) => {
+      if (visiting.has(edge.to)) return;
+
+      const targetOrder = order.get(edge.to) ?? 0;
+      const sourceOrder = order.get(edge.from) ?? 0;
+      const looksLikeBackEdge = targetOrder <= sourceOrder && (levels.get(edge.to) || 0) <= level;
+      if (looksLikeBackEdge) return;
+
+      visit(edge.to, level + 1);
     });
+
+    visiting.delete(id);
   }
 
-  if (visited !== ids.length) {
-    return new Map(ids.map((id, index) => [id, index]));
-  }
+  roots.forEach((root) => visit(root, 0));
+
+  ids.forEach((id, index) => {
+    if (!Number.isFinite(levels.get(id))) levels.set(id, index);
+  });
 
   return levels;
+}
+
+function findPrimaryDiagramPath(ids, edges) {
+  if (!ids.length) return [];
+
+  const { order, incoming, outgoing } = buildDiagramGraph(ids, edges);
+  const start = ids
+    .filter((id) => incoming.get(id) === 0)
+    .sort((a, b) => order.get(a) - order.get(b))[0] || ids[0];
+  const visited = new Set();
+  const path = [];
+  let current = start;
+
+  while (current && !visited.has(current)) {
+    path.push(current);
+    visited.add(current);
+
+    const candidates = (outgoing.get(current) || [])
+      .filter((edge) => !visited.has(edge.to))
+      .sort((a, b) => a.edgeIndex - b.edgeIndex);
+
+    current = candidates[0]?.to || null;
+  }
+
+  return path;
+}
+
+function hasDiagramCycle(ids, edges) {
+  const { outgoing } = buildDiagramGraph(ids, edges);
+  const visited = new Set();
+  const stack = new Set();
+
+  function visit(id) {
+    if (stack.has(id)) return true;
+    if (visited.has(id)) return false;
+
+    visited.add(id);
+    stack.add(id);
+
+    for (const edge of outgoing.get(id) || []) {
+      if (visit(edge.to)) return true;
+    }
+
+    stack.delete(id);
+    return false;
+  }
+
+  return ids.some((id) => visit(id));
+}
+
+function chooseDiagramLayoutMode(direction, ids, edges, levels) {
+  const primaryPath = findPrimaryDiagramPath(ids, edges);
+  const levelKeys = Array.from(new Set(Array.from(levels.values())));
+  const groupedCounts = levelKeys.map((level) => Array.from(levels.values()).filter((value) => value === level).length);
+  const maxRows = Math.max(...groupedCounts, 1);
+  const isMostlyLinear = primaryPath.length >= Math.max(6, Math.floor(ids.length * 0.72));
+  const isLongSingleLane = maxRows === 1 && levelKeys.length >= 6;
+  const hasCycle = hasDiagramCycle(ids, edges);
+
+  if (direction !== "LR" && (isMostlyLinear || isLongSingleLane || hasCycle)) {
+    return { mode: "wrapped-flow", primaryPath };
+  }
+
+  return { mode: "layered", primaryPath };
 }
 
 function buildDiagramLabel(label, x, y) {
@@ -372,38 +489,160 @@ function buildDiagramLabel(label, x, y) {
   `;
 }
 
-function renderDiagram(source) {
-  const lines = String(source || "")
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line && !line.startsWith("%%"));
+function wrapDiagramText(label, maxChars = 18, maxLines = 3) {
+  const words = String(label || "").trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return [""];
 
-  const firstLine = lines[0] || "flowchart TD";
-  const direction = /\bLR\b|\bRL\b/i.test(firstLine) ? "LR" : "TD";
-  const graphLines = /^(flowchart|graph)\b/i.test(firstLine) ? lines.slice(1) : lines;
-  const nodes = new Map();
-  const edges = [];
+  const lines = [];
+  let current = "";
 
-  graphLines.forEach((line) => {
-    const edgeMatch = line.match(/^(.+?)\s*-->(?:\|(.+?)\|)?\s*(.+)$/);
-    if (!edgeMatch) {
-      parseNodeToken(line, nodes);
+  words.forEach((word) => {
+    const next = current ? `${current} ${word}` : word;
+    if (next.length <= maxChars || !current) {
+      current = next;
       return;
     }
 
-    const from = parseNodeToken(edgeMatch[1], nodes);
-    const label = edgeMatch[2] || "";
-    const to = parseNodeToken(edgeMatch[3], nodes);
-    edges.push({ from, to, label });
+    lines.push(current);
+    current = word;
   });
 
-  const ids = Array.from(nodes.keys());
-  const boxWidth = 178;
-  const boxHeight = 60;
-  const margin = { top: 44, right: 56, bottom: 54, left: 56 };
-  const gapX = 108;
-  const gapY = 38;
-  const levels = computeDiagramLevels(ids, edges);
+  if (current) lines.push(current);
+
+  if (lines.length <= maxLines) return lines;
+
+  const clipped = lines.slice(0, maxLines);
+  clipped[maxLines - 1] = `${clipped[maxLines - 1].replace(/\.+$/, "")}...`;
+  return clipped;
+}
+
+function renderDiagramNodeText(label, centerX, centerY, boxWidth) {
+  const lines = wrapDiagramText(label, Math.max(16, Math.floor((boxWidth - 28) / 7.2)), 3);
+  const lineHeight = 15;
+  const startY = centerY - ((lines.length - 1) * lineHeight) / 2 + 4;
+
+  return lines.map((line, index) => (
+    `<text x="${centerX}" y="${startY + index * lineHeight}">${escapeHtml(line)}</text>`
+  )).join("");
+}
+
+function getDiagramAnchor(position, boxWidth, boxHeight, side) {
+  const centerX = position.x + boxWidth / 2;
+  const centerY = position.y + boxHeight / 2;
+
+  switch (side) {
+    case "left": return { x: position.x, y: centerY };
+    case "right": return { x: position.x + boxWidth, y: centerY };
+    case "top": return { x: centerX, y: position.y };
+    case "bottom": return { x: centerX, y: position.y + boxHeight };
+    default: return { x: centerX, y: centerY };
+  }
+}
+
+function chooseForwardAnchors(from, to, boxWidth, boxHeight) {
+  const fromCenter = { x: from.x + boxWidth / 2, y: from.y + boxHeight / 2 };
+  const toCenter = { x: to.x + boxWidth / 2, y: to.y + boxHeight / 2 };
+  const dx = toCenter.x - fromCenter.x;
+  const dy = toCenter.y - fromCenter.y;
+
+  if (Math.abs(dx) >= Math.abs(dy)) {
+    return dx >= 0
+      ? { start: getDiagramAnchor(from, boxWidth, boxHeight, "right"), end: getDiagramAnchor(to, boxWidth, boxHeight, "left") }
+      : { start: getDiagramAnchor(from, boxWidth, boxHeight, "left"), end: getDiagramAnchor(to, boxWidth, boxHeight, "right") };
+  }
+
+  return dy >= 0
+    ? { start: getDiagramAnchor(from, boxWidth, boxHeight, "bottom"), end: getDiagramAnchor(to, boxWidth, boxHeight, "top") }
+    : { start: getDiagramAnchor(from, boxWidth, boxHeight, "top"), end: getDiagramAnchor(to, boxWidth, boxHeight, "bottom") };
+}
+
+function renderDiagramEdge(edge, positions, layoutOrder, boxWidth, boxHeight, width, height, margin) {
+  const from = positions.get(edge.from);
+  const to = positions.get(edge.to);
+  if (!from || !to) return "";
+
+  const fromIndex = layoutOrder.indexOf(edge.from);
+  const toIndex = layoutOrder.indexOf(edge.to);
+  const isBackEdge = toIndex !== -1 && fromIndex !== -1 && toIndex <= fromIndex;
+
+  if (isBackEdge) {
+    const start = getDiagramAnchor(from, boxWidth, boxHeight, "left");
+    const end = getDiagramAnchor(to, boxWidth, boxHeight, "top");
+    const routeX = Math.max(14, Math.min(from.x, to.x, margin.left) - 34);
+    const routeY = Math.max(14, Math.min(from.y, to.y, margin.top) - 30);
+    const path = `M ${start.x} ${start.y} L ${routeX} ${start.y} L ${routeX} ${routeY} L ${end.x} ${routeY} L ${end.x} ${end.y}`;
+    const labelX = (routeX + end.x) / 2;
+    const labelY = routeY - 8;
+
+    return `
+      <path d="${path}" class="diagram-edge diagram-edge--loop" marker-end="url(#arrow)" />
+      ${buildDiagramLabel(edge.label, labelX, labelY)}
+    `;
+  }
+
+  const { start, end } = chooseForwardAnchors(from, to, boxWidth, boxHeight);
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+  let path;
+  let labelX = (start.x + end.x) / 2;
+  let labelY = (start.y + end.y) / 2 - 8;
+
+  if (Math.abs(dx) < 8 || Math.abs(dy) < 8) {
+    path = `M ${start.x} ${start.y} L ${end.x} ${end.y}`;
+  } else if (Math.abs(dx) >= Math.abs(dy)) {
+    const midX = start.x + dx / 2;
+    path = `M ${start.x} ${start.y} C ${midX} ${start.y}, ${midX} ${end.y}, ${end.x} ${end.y}`;
+  } else {
+    const midY = start.y + dy / 2;
+    path = `M ${start.x} ${start.y} C ${start.x} ${midY}, ${end.x} ${midY}, ${end.x} ${end.y}`;
+  }
+
+  return `
+    <path d="${path}" class="diagram-edge" marker-end="url(#arrow)" />
+    ${buildDiagramLabel(edge.label, labelX, labelY)}
+  `;
+}
+
+function buildWrappedDiagramLayout(ids, edges, primaryPath) {
+  const boxWidth = 216;
+  const boxHeight = 74;
+  const margin = { top: 78, right: 74, bottom: 76, left: 74 };
+  const gapX = 94;
+  const gapY = 82;
+  const columns = ids.length <= 6 ? 3 : 4;
+  const primarySet = new Set(primaryPath);
+  const layoutOrder = [
+    ...primaryPath,
+    ...ids.filter((id) => !primarySet.has(id))
+  ];
+  const rows = Math.max(1, Math.ceil(layoutOrder.length / columns));
+  const width = margin.left + margin.right + columns * boxWidth + Math.max(0, columns - 1) * gapX;
+  const height = margin.top + margin.bottom + rows * boxHeight + Math.max(0, rows - 1) * gapY;
+  const positions = new Map();
+
+  layoutOrder.forEach((id, index) => {
+    const row = Math.floor(index / columns);
+    const itemInRow = index % columns;
+    const reverse = row % 2 === 1;
+    const col = reverse ? columns - 1 - itemInRow : itemInRow;
+
+    positions.set(id, {
+      x: margin.left + col * (boxWidth + gapX),
+      y: margin.top + row * (boxHeight + gapY),
+      row,
+      col
+    });
+  });
+
+  return { positions, width, height, boxWidth, boxHeight, margin, layoutOrder };
+}
+
+function buildLayeredDiagramLayout(ids, edges, direction, levels) {
+  const boxWidth = 204;
+  const boxHeight = 72;
+  const margin = { top: 58, right: 64, bottom: 68, left: 64 };
+  const gapX = 112;
+  const gapY = 56;
   const grouped = new Map();
 
   ids.forEach((id) => {
@@ -420,7 +659,7 @@ function renderDiagram(source) {
 
   if (direction === "LR") {
     width = margin.left + margin.right + levelKeys.length * boxWidth + Math.max(0, levelKeys.length - 1) * gapX;
-    height = Math.max(260, margin.top + margin.bottom + maxRows * boxHeight + Math.max(0, maxRows - 1) * gapY);
+    height = Math.max(300, margin.top + margin.bottom + maxRows * boxHeight + Math.max(0, maxRows - 1) * gapY);
 
     levelKeys.forEach((level, columnIndex) => {
       const group = grouped.get(level);
@@ -429,14 +668,11 @@ function renderDiagram(source) {
       const x = margin.left + columnIndex * (boxWidth + gapX);
 
       group.forEach((id, rowIndex) => {
-        positions.set(id, {
-          x,
-          y: startY + rowIndex * (boxHeight + gapY)
-        });
+        positions.set(id, { x, y: startY + rowIndex * (boxHeight + gapY), row: rowIndex, col: columnIndex });
       });
     });
   } else {
-    width = Math.max(760, margin.left + margin.right + maxRows * boxWidth + Math.max(0, maxRows - 1) * gapX);
+    width = Math.max(880, margin.left + margin.right + maxRows * boxWidth + Math.max(0, maxRows - 1) * gapX);
     height = margin.top + margin.bottom + levelKeys.length * boxHeight + Math.max(0, levelKeys.length - 1) * gapY;
 
     levelKeys.forEach((level, rowIndex) => {
@@ -446,55 +682,84 @@ function renderDiagram(source) {
       const y = margin.top + rowIndex * (boxHeight + gapY);
 
       group.forEach((id, columnIndex) => {
-        positions.set(id, {
-          x: startX + columnIndex * (boxWidth + gapX),
-          y
-        });
+        positions.set(id, { x: startX + columnIndex * (boxWidth + gapX), y, row: rowIndex, col: columnIndex });
       });
     });
   }
 
-  const pathHtml = edges.map((edge) => {
-    const from = positions.get(edge.from);
-    const to = positions.get(edge.to);
-    if (!from || !to) return "";
+  const layoutOrder = ids.slice().sort((a, b) => {
+    const aPosition = positions.get(a);
+    const bPosition = positions.get(b);
+    if ((aPosition?.row || 0) !== (bPosition?.row || 0)) return (aPosition?.row || 0) - (bPosition?.row || 0);
+    return (aPosition?.col || 0) - (bPosition?.col || 0);
+  });
 
-    const x1 = direction === "LR" ? from.x + boxWidth : from.x + boxWidth / 2;
-    const y1 = direction === "LR" ? from.y + boxHeight / 2 : from.y + boxHeight;
-    const x2 = direction === "LR" ? to.x : to.x + boxWidth / 2;
-    const y2 = direction === "LR" ? to.y + boxHeight / 2 : to.y;
-    const midX = (x1 + x2) / 2;
-    const midY = (y1 + y2) / 2;
-    const curve = direction === "LR"
-      ? `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`
-      : `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`;
+  return { positions, width, height, boxWidth, boxHeight, margin, layoutOrder };
+}
 
-    return `
-      <path d="${curve}" class="diagram-edge" marker-end="url(#arrow)" />
-      ${buildDiagramLabel(edge.label, midX, midY - 8)}
-    `;
-  }).join("");
+function renderDiagram(source) {
+  const lines = String(source || "")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("%%"));
+
+  const firstLine = lines[0] || "flowchart TD";
+  const direction = /\bLR\b|\bRL\b/i.test(firstLine) ? "LR" : "TD";
+  const graphLines = /^(flowchart|graph)\b/i.test(firstLine) ? lines.slice(1) : lines;
+  const nodes = new Map();
+  const edges = [];
+
+  graphLines.forEach((line) => {
+    const edge = parseDiagramEdge(line, nodes);
+    if (edge) {
+      edges.push(edge);
+      return;
+    }
+
+    parseNodeToken(line, nodes);
+  });
+
+  const ids = Array.from(nodes.keys());
+  if (!ids.length) {
+    return `<pre class="md-code"><code>${escapeHtml(source)}</code></pre>`;
+  }
+
+  const levels = computeDiagramLevels(ids, edges);
+  const layoutChoice = chooseDiagramLayoutMode(direction, ids, edges, levels);
+  const layout = layoutChoice.mode === "wrapped-flow"
+    ? buildWrappedDiagramLayout(ids, edges, layoutChoice.primaryPath)
+    : buildLayeredDiagramLayout(ids, edges, direction, levels);
+
+  const { positions, width, height, boxWidth, boxHeight, margin, layoutOrder } = layout;
+
+  const pathHtml = edges.map((edge) => (
+    renderDiagramEdge(edge, positions, layoutOrder, boxWidth, boxHeight, width, height, margin)
+  )).join("");
 
   const nodeHtml = ids.map((id) => {
     const position = positions.get(id);
+    if (!position) return "";
+    const centerX = position.x + boxWidth / 2;
+    const centerY = position.y + boxHeight / 2;
+
     return `
       <g class="diagram-node">
-        <rect x="${position.x}" y="${position.y}" width="${boxWidth}" height="${boxHeight}" rx="16" />
-        <text x="${position.x + boxWidth / 2}" y="${position.y + 36}">${escapeHtml(nodes.get(id))}</text>
+        <rect x="${position.x}" y="${position.y}" width="${boxWidth}" height="${boxHeight}" rx="18" />
+        ${renderDiagramNodeText(nodes.get(id), centerX, centerY, boxWidth)}
       </g>
     `;
   }).join("");
 
   return `
-    <figure class="diagram-card">
+    <figure class="diagram-card diagram-card--${layoutChoice.mode}">
       <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Rendered Markdown diagram">
         <defs>
           <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
             <path d="M0,0 L0,6 L9,3 z" class="diagram-arrow" />
           </marker>
         </defs>
-        ${pathHtml}
-        ${nodeHtml}
+        <g class="diagram-edge-layer">${pathHtml}</g>
+        <g class="diagram-node-layer">${nodeHtml}</g>
       </svg>
       <figcaption>Diagram rendered from a Markdown code fence.</figcaption>
     </figure>

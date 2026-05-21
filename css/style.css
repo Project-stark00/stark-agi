@@ -2679,3 +2679,49 @@ h2 {
   stroke: rgba(6, 14, 26, 0.75);
   stroke-width: 2px;
 }
+
+/* ==========================================================
+   Markdown Diagram Readability Patch
+   Turns long/looping fallback Mermaid flows into readable
+   wrapped process diagrams instead of one straight line.
+   ========================================================== */
+.diagram-card--wrapped-flow {
+  padding: clamp(22px, 2.8vw, 36px);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 12% 12%, rgba(116, 220, 255, 0.14), transparent 34%),
+    radial-gradient(circle at 86% 18%, rgba(167, 117, 255, 0.12), transparent 38%),
+    rgba(3, 5, 11, 0.48);
+}
+
+.diagram-card--wrapped-flow svg {
+  min-width: 980px;
+}
+
+.diagram-edge-layer {
+  opacity: 0.98;
+}
+
+.diagram-node-layer {
+  filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.26));
+}
+
+.diagram-edge--loop {
+  stroke-dasharray: 8 8;
+  stroke: rgba(167, 117, 255, 0.78);
+  filter: drop-shadow(0 0 9px rgba(167, 117, 255, 0.34));
+}
+
+.diagram-node text {
+  dominant-baseline: middle;
+  paint-order: stroke;
+  stroke: rgba(6, 14, 26, 0.65);
+  stroke-width: 2px;
+  stroke-linejoin: round;
+}
+
+@media (max-width: 980px) {
+  .diagram-card--wrapped-flow svg {
+    min-width: 860px;
+  }
+}
