@@ -29,36 +29,6 @@
         "Architecture",
         "Cognitive Runtime"
       ]
-    },
-    {
-      "slug": "stark-native-kernel-debugging-example",
-      "title": "Example: Debugging the First StarkAGI Kernel Loop",
-      "date": "2026-05-20",
-      "category": "Problem Log",
-      "status": "Active",
-      "summary": "A sample article showing how to document a problem, the fix, the verification steps, unresolved questions, a diagram, and a chart.",
-      "file": "articles/stark-native-kernel-debugging-example.md",
-      "tags": [
-        "Kernel",
-        "Debugging",
-        "Markdown",
-        "Diagram",
-        "Chart"
-      ]
-    },
-    {
-      "slug": "unsolved-memory-resonance-note",
-      "title": "Example: Unsolved Memory Resonance Question",
-      "date": "2026-05-20",
-      "category": "Open Research",
-      "status": "Unsolved",
-      "summary": "A short example of how to publish a problem that has not been solved yet, while keeping the decision trail visible.",
-      "file": "articles/unsolved-memory-resonance-note.md",
-      "tags": [
-        "Memory",
-        "Research",
-        "Unsolved"
-      ]
     }
   ]
 }
