@@ -1,13 +1,20 @@
 {
   "projectStatus": {
-    "currentPhase": "Phase 1 — Continuous State Micro-Life Core",
-    "activeMilestone": "M1 — Isolated C++ Micro-Kernel",
-    "overallStatus": "Active Development - Multiple Phases Complete",
-    "lastUpdated": "2026-05-21",
+    "currentPhase": "Stage 1 → Stage 2 — Native Authority Promotion",
+    "activeMilestone": "M1 — Native Memory Gate Bridge",
+    "overallStatus": "Architecture refreshed from Obsidian vault",
+    "lastUpdated": "2026-05-22",
     "repository": "https://github.com/Project-stark00/stark-agi.github.io",
-    "focus": "Implementation of the smallest inspectable continuous-state substrate before introducing memory or autonomy."
+    "focus": "Promote the existing C++ native core from advisory snapshot evidence toward a controlled memory proposal gate while keeping Python policy and tool authority intact."
   },
   "logs": [
+    {
+      "date": "2026-05-22",
+      "title": "Current architecture vault published",
+      "type": "Architecture",
+      "status": "Completed",
+      "summary": "Updated the website to match the Obsidian architecture vault: Python runtime owns decisions today, native C++ core is advisory-only, and the next safe gate is the Native Memory Gate Bridge."
+    },
     {
       "date": "2026-05-20",
       "title": "Native Digital Life Vault Ingested",
@@ -109,92 +116,54 @@
   ],
   "milestones": [
     {
-      "id": "P0",
-      "title": "Specification Hardening",
+      "id": "S1",
+      "title": "Native Advisory Snapshot",
       "status": "Completed",
-      "summary": "Define axioms, authority, and non-negotiable red lines."
+      "summary": "Native health, tick, work planning, and snapshot data are visible to Python, but native cannot execute tools or bypass policy."
     },
     {
-      "id": "P1",
-      "title": "Continuous State Micro-Life Core",
+      "id": "S2",
+      "title": "Native Memory Proposal Gate",
       "status": "In Progress",
-      "summary": "M1: Isolated C++ core with fixed-length state and inspection logs."
+      "summary": "Expose MemoryCandidateProposal through the native bridge and route it through a Python MemoryGate before persistence."
     },
     {
-      "id": "P2",
-      "title": "State Region Stabilization",
-      "status": "Completed",
-      "summary": "Stabilize functional regions for perception and cognitive state."
-    },
-    {
-      "id": "P3",
-      "title": "Feedback & Correction Engine",
-      "status": "Completed",
-      "summary": "Implement gated fusion and feedback weighting."
-    },
-    {
-      "id": "P4",
-      "title": "Chronicle Evidence Spine",
-      "status": "Completed",
-      "summary": "Create a durable evidence trail of cognitive state changes."
-    },
-    {
-      "id": "P5",
-      "title": "Native Memory Bridge",
-      "status": "Completed",
-      "summary": "Bridge the state core to an external MemoryStore."
-    },
-    {
-      "id": "P6",
-      "title": "Drive Engine",
-      "status": "Completed",
-      "summary": "Implement intent projection and goal pressure."
-    },
-    {
-      "id": "P7",
-      "title": "Projection Engine",
-      "status": "Completed",
-      "summary": "Map internal state to external representations."
-    },
-    {
-      "id": "P8",
-      "title": "Ollama Renderer Bridge",
-      "status": "Completed",
-      "summary": "Connect the core mind to an LLM 'mouth' for output."
-    },
-    {
-      "id": "P9",
-      "title": "24/7 Daemon Runtime",
-      "status": "Completed",
-      "summary": "Transition the core to a persistent background runtime."
-    },
-    {
-      "id": "P10",
-      "title": "Work Mode Integration",
-      "status": "Completed",
-      "summary": "Integrate core cognition into software engineering workflows."
-    },
-    {
-      "id": "P11",
-      "title": "Obsidian Mirror",
+      "id": "S3",
+      "title": "Mode and Drive Influence",
       "status": "Planned",
-      "summary": "Export braincells to an Obsidian mirror for human review."
+      "summary": "Let native work mode and drive state influence behavior mode and prompt context without granting direct execution authority."
     },
     {
-      "id": "P12",
-      "title": "Native Renderer Research",
-      "status": "Completed",
-      "summary": "Explore native visualization of cognitive states."
+      "id": "S4",
+      "title": "Permission Advisory Gate",
+      "status": "Planned",
+      "summary": "Require native advisory approval plus Python policy approval for selected high-impact actions."
+    },
+    {
+      "id": "S5",
+      "title": "Native Daemon Lifecycle Authority",
+      "status": "Planned",
+      "summary": "Promote native daemon state into a resident lifecycle signal after memory and permission gates are stable."
+    },
+    {
+      "id": "S6",
+      "title": "Native Primary State Substrate",
+      "status": "Long-Term",
+      "summary": "Native state becomes the first-class continuity layer while Python provides UI, tools, persistence, and rendering."
     }
   ],
   "notes": [
     {
-      "title": "The Continuous-State Shift",
-      "body": "Stark is moving away from the Transformer paradigm toward a local-first continuous-state runtime that manages perception, memory, and intent without tokenization."
+      "title": "Current authority boundary",
+      "body": "Python gateway, orchestrator, memory, policy, tools, and LLM runtime own shipped behavior today. The C++ native core provides advisory evidence."
     },
     {
-      "title": "Language as Rendering",
-      "body": "In this architecture, language is a rendering layer. The native kernel owns the intent; the LLM merely polishes the final output."
+      "title": "Do not skip the bridge",
+      "body": "The safe next promotion step is the Native Memory Gate Bridge, not direct native tool execution or broad daemon authority."
+    },
+    {
+      "title": "Memory as active state",
+      "body": "Retrieved memory should be compiled into active cognitive state with source, authority, confidence, and purpose instead of becoming raw system authority."
     }
   ]
 }

@@ -220,3 +220,35 @@ Then open:
 http://localhost:8000/articles.html
 ```
 
+
+
+## Current architecture update
+
+The public site has been updated from the Obsidian vault:
+
+```text
+Stark_Current_Architecture_Obsidian_Vault/
+```
+
+Main public article:
+
+```text
+articles/stark-current-architecture-snapshot.md
+```
+
+Current public architecture statement:
+
+```text
+Python runtime owns shipped decisions today.
+The C++ native core is real but advisory-only.
+The next safe promotion gate is M1 Native Memory Gate Bridge.
+```
+
+When the architecture vault changes again, update:
+
+```text
+index.html
+data/progress.json
+data/articles.json
+articles/stark-current-architecture-snapshot.md
+```
