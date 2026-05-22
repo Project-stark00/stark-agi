@@ -12,6 +12,10 @@ const fallbackArticles = {
   ]
 };
 
+const embeddedArticleMarkdown = {
+  "stark-current-architecture-snapshot": '---\ntitle: "Stark Current Architecture Snapshot"\ndate: "2026-05-22"\ncategory: "Architecture"\nstatus: "Current"\nsummary: "A readable website version of the current Stark architecture vault: Python runtime authority today, C++ native advisory substrate, memory/context flow, risks, and the next promotion gate."\ntags: ["Architecture", "Native Core", "Python Runtime", "Memory", "Roadmap"]\n---\n\n# Stark Current Architecture Snapshot\n\nThis article summarizes the current Stark architecture from the Obsidian vault.\n\nThe most important truth is simple:\n\n> Stark currently has a real C++ native kernel substrate, but the shipped runtime is still Python-first. The native core is meaningful, bounded, and advisory-only.\n\nThat distinction matters because the project is trying to become a native digital-life architecture without pretending that the native layer already owns every decision.\n\n## Current System Identity\n\nStark is currently best described as:\n\n```text\nA local-first LLM assistant runtime with strong orchestration, memory, policy, tools, and a real model-free C++ native kernel substrate bridged in as advisory evidence.\n```\n\nIt is not yet:\n\n```text\nA fully native digital-life kernel where the native substrate is the primary authority and the LLM is only one swappable organ.\n```\n\n## Current Runtime Map\n\n```mermaid\ngraph TD\n    Start[scripts/start_stark.py] --> HUD[scripts/run_local_hud.py]\n    HUD --> UI[FastAPI Local UI]\n    UI --> Gateway[SessionGateway]\n    Gateway --> Orchestrator[Python Orchestrator]\n    Orchestrator --> Brain[Layered Brain Pipeline]\n    Brain --> Memory[SQLite Memory and Retrieval]\n    Brain --> LLM[LLM Runtime and Router]\n    Brain --> Tools[Tools, Operator, Coding]\n    Gateway --> NativeBridge[NativeKernelBridge]\n    NativeBridge --> NativeCore[C++ Native Core]\n    NativeCore -. advisory snapshot .-> Gateway\n```\n\n## Authority Today\n\n| Layer | Current role |\n|---|---|\n| Python gateway / orchestrator | Owns real shipped runtime decisions |\n| Python policy and tool gates | Protects tool execution and approvals |\n| Python memory and prompt builder | Persists and retrieves context |\n| Native bridge snapshot | Exposes native evidence to Python |\n| C++ native core state | Provides bounded advisory substrate |\n\nThe target direction is different:\n\n```text\nC++ Native Kernel\n  owns state, lifecycle, memory gates, and decision direction\n\nPython / LLM Runtime\n  provides language, tools, UI, persistence, and execution under native governance\n```\n\nBut this target must be reached gradually.\n\n## Native Kernel Layer\n\nThe native kernel lives in:\n\n```text\nnative/stark_native_core/\n```\n\nThe Python bridge lives in:\n\n```text\nassistant/native_bridge/\n```\n\nThe native core is designed to be:\n\n```text\nbounded\nmodel-free\ntool-free\nadvisory-only\n```\n\nIt currently owns low-level concepts such as:\n\n- daemon lifecycle\n- fixed-size state regions\n- sensory signal fusion\n- partition and write monitoring\n- checkpoint deltas\n- chronicle evidence\n- associative memory\n- idle review\n- drive engine\n- projection engine\n- native renderer boundary checks\n- work-mode planning\n- C ABI bridge\n\n## Native State Regions\n\nThe current native state field is:\n\n```text\n10 regions × 64 floats\n```\n\nThe regions are:\n\n| Region | Purpose |\n|---|---|\n| Survival | continuity and safety pressure |\n| Perception | incoming signal interpretation |\n| Host | host/user relationship state |\n| Working | active short-term processing |\n| Concept | conceptual state |\n| Memory | native memory resonance |\n| Goal | goal pressure |\n| Value | value alignment signals |\n| Action | action tendency |\n| SelfModel | internal self-state |\n\nThis is the closest current repo component to the Stark Native Digital Life direction:\n\n```text\ncontinuous low-dimensional state\nnot tokens\nnot transformer hidden states\nnot next-token prediction\n```\n\n## Native Flow Today\n\n```mermaid\ngraph TD\n    Signal[Sensory Signal] --> Fusion[Fusion Engine]\n    Fusion --> Monitor[Partition Monitor]\n    Monitor --> State[State Field]\n    Fusion --> Trace[Learning Source Trace]\n    Fusion --> Delta[Checkpoint Delta]\n    State --> Drive[Drive Engine]\n    State --> Projection[Projection Engine]\n    Projection --> Renderer[Native Renderer]\n    State --> Daemon[Daemon Runtime]\n    Daemon --> Snapshot[C ABI Snapshot]\n```\n\n## Python Runtime Layer\n\nThe Python runtime currently owns the shipped assistant behavior.\n\nIt handles:\n\n- session gateway\n- local UI and HUD\n- orchestration\n- brain pipeline\n- memory persistence\n- LLM runtime\n- tool execution\n- operator and coding modules\n- approvals and policy\n- snapshots\n\nImportant folders:\n\n```text\nassistant/gateway/\nassistant/orchestrator/\nassistant/brain/\nassistant/memory/\nassistant/llm_runtime/\nassistant/tools/\nassistant/operator/\nassistant/coding/\nassistant/security/\nassistant/policy/\nassistant/ui/\n```\n\n## Memory and Context Architecture\n\nThe current memory system is mostly:\n\n```text\nSQLite + FTS5 + ranking + semantic-index scaffolding + memory edges\n```\n\nImportant strengths:\n\n- local-first persistence\n- SQLite WAL / FTS style practicality\n- memory ranking exists\n- memory edges exist\n- semantic index scaffolding exists\n- Obsidian import/export logic exists\n- brain bridge exists\n\nImportant missing pieces for long-term Stark:\n\n- append-only tamper-evident memory journal as source of truth\n- hot / warm / cold memory separation\n- daily and session compaction\n- native memory proposal gate\n- memory authority labels inside prompt composition\n- large-scale vector backend for semantic recall\n- raw event archive separated from learned memories\n- active-thread context manager\n\n## Prompt Context Problem\n\nThe current prompt builder places memory-like context inside the system message under:\n\n```text\n## CONTEXT\n### MEMORIES\n### EVENTS\n```\n\nThat works technically, but it can blur authority between immutable system rules and retrieved memory.\n\nThe recommended future internal prompt object is:\n\n```text\nCore System\nCurrent Mode\nActive Memory State\nActive Thread State\nRecent Raw Conversation\nCurrent User Message\n```\n\nMemory should become active cognitive state, not a raw blob.\n\n## Target Memory Pyramid\n\n```mermaid\ngraph TD\n    Core[Level 5: Sealed Core Rules] --> BrainCells[Level 4: Brain Cells]\n    BrainCells --> Semantic[Level 3: Semantic Memories]\n    Semantic --> Episodic[Level 2: Episodic Memories]\n    Episodic --> Session[Level 1: Session Summaries]\n    Session --> Raw[Level 0: Raw Event Journal]\n```\n\n## Native Bridge Flow\n\nThe current bridge exposes methods such as:\n\n```python\nhealth()\ntick(...)\nplan_work(...)\nsnapshot()\n```\n\nCurrent characteristics:\n\n- uses `ctypes`\n- loads native library from `tmp/native_core_build/`\n- fails closed if the native library is missing\n- marks native as `advisory_only = True`\n- returns `can_execute_tools = False`\n\nCurrent bridge flow:\n\n```mermaid\ngraph TD\n    Gateway[SessionGateway] --> Bridge[NativeKernelBridge]\n    Bridge --> DLL[Native DLL or SO]\n    DLL --> Native[stark_native_core]\n    Native --> Snapshot[Snapshot JSON]\n    Snapshot --> Gateway\n    Gateway --> UI[HUD / Snapshot Bundle]\n```\n\n## Next Recommended Milestone\n\nThe next safe milestone is:\n\n```text\nM1 Native Memory Gate Bridge\n```\n\nGoal:\n\n```text\nConnect native chronicle / memory proposal structures to Python memory persistence as a controlled advisory memory gate.\n```\n\nDo not do these yet:\n\n- do not let native execute tools\n- do not replace SQLite\n- do not redesign the entire prompt builder\n- do not jump straight to a native daemon with broad authority\n\nRecommended flow:\n\n```mermaid\ngraph TD\n    Event[Runtime Event] --> Signal[Native Compact Signal]\n    Signal --> Native[Native Core]\n    Native --> Proposal[MemoryCandidateProposal]\n    Proposal --> Bridge[C ABI Bridge]\n    Bridge --> PyBridge[NativeKernelBridge]\n    PyBridge --> Gate[Python Memory Gate]\n    Gate --> Store[Memory Store]\n    Store --> Result[Commit or Reject Result]\n    Result --> Feedback[Native Feedback]\n```\n\n## Promotion Roadmap\n\n```mermaid\ngraph TD\n    S1[Stage 1: Native Advisory Snapshot] --> S2[Stage 2: Native Memory Proposal Gate]\n    S2 --> S3[Stage 3: Native Mode and Drive Influence]\n    S3 --> S4[Stage 4: Native Permission Advisory Hard Gate]\n    S4 --> S5[Stage 5: Native Daemon Lifecycle Authority]\n    S5 --> S6[Stage 6: Native Primary State Substrate]\n```\n\nThe architecture rule is:\n\n```text\nDo not jump from Stage 1 to Stage 6.\n```\n\nThe safe step is Stage 2.\n\n## Major Risks\n\n| Risk | Mitigation |\n|---|---|\n| Promoting native too fast | promote one gate at a time |\n| Memory poisoning | add authority labels, source tracking, confidence, and host override rules |\n| Giant context dumps | use active memory state, summaries, pinned context, and dynamic thread windows |\n| SQLite becoming both truth and search forever | use journal as truth and DB as rebuildable index |\n| UI showing fake readiness | every module should show live / partial / mock status clearly |\n\n## Builder Target\n\nThe current builder milestone should focus only on:\n\n```text\nNative MemoryCandidateProposal\n  → Python MemoryGate\n  → persistent journal / index\n  → native feedback\n```\n\nAcceptance should include:\n\n- native proposal visible through bridge\n- Python can read proposal fields\n- high-authority core/canon proposals are rejected without explicit host approval\n- normal low-risk proposals can be persisted with native metadata\n- native snapshot behavior remains advisory-only\n- `can_execute_tools` remains false\n- existing shipped tests continue passing\n\n## Summary\n\nStark currently has a strong Python assistant runtime and a real C++ native core substrate.\n\nThe future direction is native authority, but the correct path is not a sudden rewrite. The correct path is staged promotion:\n\n```text\nadvisory native evidence\n  → native memory proposal gate\n  → mode and drive influence\n  → permission advisory gate\n  → daemon lifecycle authority\n  → primary native state substrate\n```\n'
+};
+
 const articleList = document.getElementById("articleList");
 const articleMount = document.getElementById("articleMount");
 
@@ -1102,27 +1106,88 @@ async function loadJson(path, fallback) {
   }
 }
 
+function uniqueValues(values) {
+  return [...new Set(values.filter(Boolean))];
+}
+
+function buildArticleFetchCandidates(meta) {
+  const file = String(meta?.file || "").trim();
+  const slug = String(meta?.slug || "").trim();
+  const slugFile = slug ? `articles/${slug}.md` : "";
+  const normalizedFile = file.replace(/^\.\//, "").replace(/^\//, "");
+  const normalizedSlugFile = slugFile.replace(/^\.\//, "").replace(/^\//, "");
+
+  return uniqueValues([
+    normalizedFile,
+    normalizedSlugFile,
+    `./${normalizedFile}`,
+    `./${normalizedSlugFile}`
+  ]);
+}
+
+async function fetchArticleMarkdown(meta) {
+  const candidates = buildArticleFetchCandidates(meta);
+  const attempts = [];
+
+  for (const path of candidates) {
+    try {
+      const url = new URL(path, window.location.href);
+      url.searchParams.set("v", String(Date.now()));
+      const response = await fetch(url.toString(), { cache: "reload" });
+      attempts.push(`${path} → HTTP ${response.status}`);
+
+      if (response.ok) {
+        return { markdown: await response.text(), attempts, usedFallback: false };
+      }
+    } catch (error) {
+      attempts.push(`${path} → ${error?.message || "fetch failed"}`);
+    }
+  }
+
+  const embedded = embeddedArticleMarkdown[String(meta?.slug || "")];
+  if (embedded) {
+    attempts.push("embedded fallback → used");
+    return { markdown: embedded, attempts, usedFallback: true };
+  }
+
+  const error = new Error("Article Markdown file could not be loaded");
+  error.attempts = attempts;
+  throw error;
+}
+
 async function loadArticle(meta) {
   if (!meta) return;
 
   articleMount.innerHTML = `<div class="article-loading">Loading ${escapeHtml(meta.title)}…</div>`;
 
   try {
-    const response = await fetch(meta.file, { cache: "no-store" });
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const markdown = await response.text();
-    renderArticle(markdown, meta);
+    const result = await fetchArticleMarkdown(meta);
+    renderArticle(result.markdown, meta);
+
+    if (result.usedFallback) {
+      const body = articleMount.querySelector(".markdown-article__body");
+      if (body) {
+        const note = document.createElement("aside");
+        note.className = "article-inline-warning";
+        note.innerHTML = `
+          <strong>Rendered from embedded fallback.</strong>
+          <span>The live Markdown file was not reachable from this deployed page. Upload <code>${escapeHtml(meta.file || `articles/${meta.slug}.md`)}</code> to the same GitHub Pages branch so future edits load from the Markdown file directly.</span>
+        `;
+        body.prepend(note);
+      }
+    }
   } catch (error) {
+    const attempts = Array.isArray(error.attempts) ? error.attempts : [];
     articleMount.innerHTML = `
       <div class="article-empty-state">
-        <p class="section-kicker">Local preview note</p>
+        <p class="section-kicker">Markdown file not reachable</p>
         <h2>Could not load the Markdown file.</h2>
         <p>
-          Browsers usually block Markdown loading when this page is opened with <code>file://</code>.
-          Preview through a local server instead:
+          The article list loaded successfully, but the selected Markdown file is missing or unreachable from the deployed site.
+          Confirm this file exists in the repository at <code>${escapeHtml(meta.file || `articles/${meta.slug}.md`)}</code>.
         </p>
-        <pre class="md-code"><code>python -m http.server 8000</code></pre>
-        <p>Then open <code>http://localhost:8000/articles.html?article=${escapeHtml(meta.slug)}</code>.</p>
+        ${attempts.length ? `<div class="article-fetch-debug"><strong>Fetch attempts</strong><pre class="md-code"><code>${escapeHtml(attempts.join("\n"))}</code></pre></div>` : ""}
+        <p>For local preview, run <code>python -m http.server 8000</code> and open <code>http://localhost:8000/articles.html?article=${escapeHtml(meta.slug)}</code>.</p>
       </div>
     `;
   }
