@@ -15,7 +15,7 @@
       "title": "Example: Debugging the First StarkAGI Kernel Loop",
       "date": "2026-05-20",
       "category": "Problem Log",
-      "status": "Example",
+      "status": "Active",
       "summary": "A sample article showing how to document a problem, the fix, the verification steps, unresolved questions, a diagram, and a chart.",
       "file": "articles/stark-native-kernel-debugging-example.md",
       "tags": ["Kernel", "Debugging", "Markdown", "Diagram", "Chart"]
